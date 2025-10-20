@@ -1,3 +1,57 @@
+# Portfolio (Create React App + Tailwind)
+
+This project is a Create React App scaffolded site with Tailwind CSS and `lucide-react` icons.
+
+Recommended deployment: Vercel (zero-config, automatic deployments from GitHub/GitLab/Bitbucket). Netlify and GitHub Pages are also supported.
+
+Quick start (local)
+
+```bash
+# install deps
+npm install
+
+# start dev server
+npm start
+
+# build for production
+npm run build
+```
+
+Production build
+
+The production-ready files are generated in the `build/` folder after running `npm run build`.
+
+Deploy options
+
+- Vercel (recommended)
+  1. Create a Vercel account and connect your GitHub repository.
+  2. Import the project. Vercel auto-detects Create React App and sets the build command to `npm run build` and the output directory to `build`.
+  3. Push to your main branch — Vercel will build and deploy automatically.
+
+- Netlify
+  1. Create a Netlify account and connect your repo.
+  2. Set build command: `npm run build` and publish directory: `build`.
+  3. Deploy — Netlify will run builds on your pushes.
+
+- GitHub Pages
+  - Option A: Use the `gh-pages` package (simple, deploy from npm scripts):
+    1. Install: `npm install --save-dev gh-pages`
+    2. Add to `package.json`:
+       ```json
+       "homepage": "https://<username>.github.io/<repo-name>",
+       "scripts": {
+         "predeploy": "npm run build",
+         "deploy": "gh-pages -d build"
+       }
+       ```
+    3. Run `npm run deploy` to publish to the `gh-pages` branch.
+  - Option B: Use GitHub Actions to build and push `build/` to `gh-pages` (recommended for CI).
+
+Notes
+- If you want, I can add a GitHub Actions workflow to automatically build and deploy to GitHub Pages or Netlify on push. I can also create a Vercel project for you if you give me repository access or confirm the repo URL.
+
+Contact
+- If you want me to wire up automated deploy (Vercel, Netlify, or GH Pages), tell me which provider and whether the repo is on GitHub (and share the URL) or if you want manual deploy instructions only.
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

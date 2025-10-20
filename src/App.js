@@ -154,7 +154,7 @@ const Portfolio = () => {
             <p className="text-base leading-relaxed text-white/60">Specializing in color grading, motion graphics, and creative storytelling. Every frame tells a story, and I'm here to make yours unforgettable.</p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-8 relative z-30">
+          <div className="flex flex-wrap justify-center gap-4 mb-8 relative z-30" style={{ transform: `translateY(${scrollY * 0.25}px)` }}>
             {keywords.map((keyword, idx) => (
               <div key={idx} className="group px-6 py-3 bg-white/[0.03] backdrop-blur-3xl rounded-full border border-white/[0.08] hover:bg-white/[0.06] hover:backdrop-blur-2xl hover:scale-110 hover:border-white/[0.15] transition-all duration-500 cursor-pointer relative overflow-hidden">
                 <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

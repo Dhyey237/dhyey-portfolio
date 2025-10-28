@@ -51,13 +51,13 @@ const Portfolio = () => {
 
   const handleClientSubmit = () => {
     const message = `New Client Inquiry:\nName: ${clientForm.name}\nEmail: ${clientForm.email}\nMessage: ${clientForm.message}`;
-    window.open(`https://wa.me/919879612345?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/919879672277?text=${encodeURIComponent(message)}`, '_blank');
     setClientForm({ name: '', email: '', message: '' });
   };
 
   const handleQuerySubmit = () => {
     const message = `Quick Query:\nName: ${queryForm.name}\nQuery: ${queryForm.query}`;
-    window.open(`https://wa.me/919879612345?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/919879672277?text=${encodeURIComponent(message)}`, '_blank');
     setQueryForm({ name: '', query: '' });
   };
 
@@ -85,7 +85,7 @@ const Portfolio = () => {
     { name: 'Instagram @kahin.door', icon: Instagram, link: 'https://instagram.com/kahin.door', gradient: 'from-orange-600/30 to-red-700/30' },
     { name: 'Upwork', icon: ExternalLink, link: '#', gradient: 'from-green-600/30 to-emerald-700/30' },
     { name: 'Stock Images', icon: FileImage, link: '#', gradient: 'from-blue-600/30 to-cyan-700/30' },
-    { name: 'WhatsApp', icon: MessageCircle, link: 'https://wa.me/919879612345', gradient: 'from-green-700/30 to-green-600/30' }
+    { name: 'WhatsApp', icon: MessageCircle, link: 'https://wa.me/919879672277', gradient: 'from-green-700/30 to-green-600/30' }
   ];
 
   const keywords = [
@@ -95,7 +95,6 @@ const Portfolio = () => {
     { name: 'Photography', icon: Camera },
     { name: 'Cinematography', icon: Aperture },
     { name: 'Motion Graphics', icon: Zap },
-    { name: 'Audio Design', icon: Award }
   ];
 
   return (
@@ -139,7 +138,7 @@ const Portfolio = () => {
         </div>
         
         <div className="relative z-10 max-w-6xl w-full mx-auto text-center">
-          <div className="relative inline-block mb-8" style={{ transform: `translateY(${scrollY * 0.3}px)` }}>
+          <div className="relative inline-block mb-8 mt-24">
             <div className="w-72 h-72 mx-auto rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl">
               <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="Dhyey Patel" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
@@ -301,7 +300,7 @@ const Portfolio = () => {
             <a href="https://instagram.com/kahin.door" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/80 transition-all duration-500 hover:scale-110">
               <Instagram className="w-6 h-6" />
             </a>
-            <a href="https://wa.me/919879612345" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/80 transition-all duration-500 hover:scale-110">
+            <a href="https://wa.me/919879672277" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/80 transition-all duration-500 hover:scale-110">
               <MessageCircle className="w-6 h-6" />
             </a>
           </div>

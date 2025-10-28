@@ -131,29 +131,26 @@ const Portfolio = () => {
         </div>
       </nav>
 
-      {/* Move hero image container here, after navbar */}
-      <div className="relative inline-block mb-8 mt-40 w-full flex justify-center z-10">
-        <div className="w-72 h-72 rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="Dhyey Patel" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-        </div>
-      </div>
-
-      <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10">
+      <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10 pt-32"> {/* Added pt-32 for navbar spacing */}
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920" alt="Background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
         </div>
         
-        <div className="relative z-10 max-w-6xl w-full mx-auto text-center">
-          {/* Removed hero image from here */}
-          <h1 className="text-7xl font-bold mb-4 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl" style={{ transform: `translateY(${scrollY * 0.15}px)` }}>Dhyey Patel</h1>
-          <p className="text-2xl mb-8 text-white/70 font-light" style={{ transform: `translateY(${scrollY * 0.2}px)` }}>Video Editor | Photographer | Storyteller</p>
-          <div className="max-w-3xl mx-auto p-8 bg-white/[0.03] backdrop-blur-3xl rounded-3xl border border-white/[0.08] shadow-2xl mb-12 relative z-10" style={{ transform: `translateY(${scrollY * 0.25}px)` }}>
+        <div className="relative z-10 max-w-6xl w-full mx-auto text-center flex flex-col items-center">
+          <div className="relative inline-block mb-8">
+            <div className="w-72 h-72 mx-auto rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl bg-gradient-to-b from-black/60 via-black/30 to-transparent">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="Dhyey Patel" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+            </div>
+          </div>
+          <h1 className="text-7xl font-bold mb-4 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">Dhyey Patel</h1>
+          <p className="text-2xl mb-8 text-white/70 font-light">Video Editor | Photographer | Storyteller</p>
+          <div className="max-w-3xl mx-auto p-8 bg-white/[0.03] backdrop-blur-3xl rounded-3xl border border-white/[0.08] shadow-2xl mb-12 relative z-10">
             <p className="text-lg leading-relaxed text-white/70 mb-6">Crafting visual stories that captivate and inspire. With a passion for cinematography and an eye for detail, I transform moments into timeless memories through the art of video editing and photography.</p>
             <p className="text-base leading-relaxed text-white/60">Specializing in color grading, motion graphics, and creative storytelling. Every frame tells a story, and I'm here to make yours unforgettable.</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-4 mb-8 relative z-30" style={{ transform: `translateY(${scrollY * 0.25}px)` }}>
+          <div className="flex flex-wrap justify-center gap-4 mb-8 relative z-30">
             {keywords.map((keyword, idx) => (
               <div key={idx} className="group px-6 py-3 bg-white/[0.03] backdrop-blur-3xl rounded-full border border-white/[0.08] hover:bg-white/[0.06] hover:backdrop-blur-2xl hover:scale-110 hover:border-white/[0.15] transition-all duration-500 cursor-pointer relative overflow-hidden">
                 <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

@@ -160,11 +160,11 @@ const Portfolio = () => {
 
       <div className="fixed w-32 h-32 rounded-full pointer-events-none z-40 transition-none mix-blend-screen opacity-0" style={{ left: mousePos.x - 64, top: mousePos.y - 64, background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%)' }} />
 
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-2.5 bg-white/[0.03] backdrop-blur-3xl rounded-full border border-white/[0.08] shadow-2xl max-w-[95vw] overflow-x-auto">
-        <div className="flex gap-3 md:gap-6 items-center whitespace-nowrap">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-2.5 bg-white/[0.05] backdrop-blur-2xl rounded-full border border-white/[0.1] shadow-[0_0_30px_rgba(0,0,0,0.3)] max-w-[95vw] overflow-x-auto before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-b before:from-white/[0.12] before:to-transparent before:pointer-events-none before:z-0">
+        <div className="flex gap-3 md:gap-6 items-center whitespace-nowrap relative z-10">
           {[{ id: 'hero', label: 'Home' }, { id: 'skills', label: 'Skills' }, { id: 'tools', label: 'Handles' }, { id: 'gallery', label: 'Gallery' }, { id: 'contact', label: 'Contact' }].map((item) => (
-            <button key={item.id} onClick={() => scrollToSection(item.id)} onMouseEnter={() => setHoveredNav(item.id)} onMouseLeave={() => setHoveredNav(null)} className={`relative px-3 md:px-5 py-2 rounded-full transition-all duration-500 group overflow-hidden ${activeSection === item.id ? 'bg-white/[0.08] text-white' : hoveredNav === item.id ? 'bg-white/[0.06] text-white/90' : 'text-white/50 hover:text-white/90'}`}>
-              <div className={`absolute inset-0 bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-blue-500/10 backdrop-blur-xl rounded-full transition-all duration-500 ${hoveredNav === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} />
+            <button key={item.id} onClick={() => scrollToSection(item.id)} onMouseEnter={() => setHoveredNav(item.id)} onMouseLeave={() => setHoveredNav(null)} className={`relative px-3 md:px-5 py-2 rounded-full transition-all duration-500 group overflow-hidden ${activeSection === item.id ? 'bg-white/[0.12] text-white shadow-inner' : hoveredNav === item.id ? 'bg-white/[0.08] text-white/90' : 'text-white/70 hover:text-white'}`}>
+              <div className={`absolute inset-0 bg-gradient-to-b from-white/[0.15] to-transparent backdrop-blur-xl rounded-full transition-all duration-500 ${hoveredNav === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} />
               <span className="relative z-10 text-xs md:text-sm font-medium">{item.label}</span>
             </button>
           ))}
@@ -187,11 +187,17 @@ const Portfolio = () => {
               </div>
             </div>
 
-            <div className="pt-32 px-6 pb-8 bg-white/[0.03] backdrop-blur-3xl rounded-3xl border border-white/[0.08] shadow-2xl mb-12 mx-auto relative z-10">
-              <h1 className="text-5xl md:text-7xl font-bold mb-2 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">Dhyey Patel</h1>
-              <p className="text-lg md:text-2xl mb-6 text-white/70 font-light">Video Editor | Photographer | Storyteller</p>
-              <p className="text-base leading-relaxed text-white/60">Crafting visual stories that captivate and inspire. With a passion for cinematography and an eye for detail, I transform moments into timeless memories through the art of video editing and photography.</p>
-              <p className="text-sm leading-relaxed text-white/50 mt-4">Specializing in color grading, motion graphics, and creative storytelling. Every frame tells a story, and I'm here to make yours unforgettable.</p>
+            <div className="pt-32 px-6 pb-8 bg-white/[0.05] backdrop-blur-2xl rounded-3xl border border-white/[0.1] shadow-[0_0_50px_rgba(0,0,0,0.3)] mb-12 mx-auto relative z-10 before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-b before:from-white/[0.12] before:to-transparent before:pointer-events-none overflow-hidden group hover:bg-white/[0.08] transition-all duration-700">
+              {/* iOS 16 style light effect */}
+              <div className="absolute -inset-[500px] bg-gradient-radial from-blue-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl"/>
+              <div className="absolute -inset-[500px] bg-gradient-radial from-purple-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl" style={{ transform: 'translate(50%, 0)' }}/>
+              
+              <div className="relative z-10">
+                <h1 className="text-5xl md:text-7xl font-bold mb-2 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">Dhyey Patel</h1>
+                <p className="text-lg md:text-2xl mb-6 text-white/80 font-light">Video Editor | Photographer | Storyteller</p>
+                <p className="text-base leading-relaxed text-white/70">Crafting visual stories that captivate and inspire. With a passion for cinematography and an eye for detail, I transform moments into timeless memories through the art of video editing and photography.</p>
+                <p className="text-sm leading-relaxed text-white/60 mt-4">Specializing in color grading, motion graphics, and creative storytelling. Every frame tells a story, and I'm here to make yours unforgettable.</p>
+              </div>
             </div>
           </div>
 

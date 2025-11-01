@@ -6,15 +6,40 @@ const IMAGES = {
   heroBackground: '/images/hero/bg.jpg',
   heroAvatar: '/images/hero/avatar.jpg',
   skillBackgrounds: [
-    '/images/skills/skill-1.jpg',
-    '/images/skills/skill-2.jpg',
-    '/images/skills/skill-3.jpg',
-    '/images/skills/skill-4.jpg',
-    '/images/skills/skill-5.jpg',
+    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f?w=600',
+    'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600',
+    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
+    'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600'
   ],
   // Gallery images (24) - replace any of these URLs to update the gallery
-  // Expect gallery images to live in public/images/gallery/1.jpg ... 24.jpg
-  gallery: Array.from({ length: 24 }).map((_, i) => `/images/gallery/${i + 1}.jpg`)
+  // Default gallery images (you can replace with local files under public/images/gallery/)
+  gallery: [
+    'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
+    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd',
+    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f',
+    'https://images.unsplash.com/photo-1556761175-4b46a572b786',
+    'https://images.unsplash.com/photo-1542038382126-3e36f93c3a5c',
+    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
+    'https://images.unsplash.com/photo-1485846234815-bf3f6a63d9ae',
+    'https://images.unsplash.com/photo-1452587925148-ce544e77e70d',
+    'https://images.unsplash.com/photo-1606857521015-7f9fcf423740',
+    'https://images.unsplash.com/photo-1567095761054-7a02e69e5c43',
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64',
+    'https://images.unsplash.com/photo-1612198188060-f6d2c0ab2550',
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36',
+    'https://images.unsplash.com/photo-1626785774573-4b799315345d',
+    'https://images.unsplash.com/photo-1515705576-fbfd5641b5d6',
+    'https://images.unsplash.com/photo-1470093851219-69c8c7c6c6c0',
+    'https://images.unsplash.com/photo-1469827160215-9d29e96e72f4',
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+    'https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5',
+    'https://images.unsplash.com/photo-1515378791036-0648a3336e77',
+    'https://images.unsplash.com/photo-1554048612-b6a482bc67e0',
+    'https://images.unsplash.com/photo-1527576539890-dfa815648363',
+    'https://images.unsplash.com/photo-1611162617474-5b21e879e113',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
+  ]
 };
 
 const Portfolio = () => {
@@ -81,8 +106,7 @@ const Portfolio = () => {
     { id: 1, title: 'Skills', items: ['Video Editing', 'Color Grading', 'Storytelling', 'Photography', 'Cinematography', 'Motion Graphics', 'Audio Design'], icon: Sparkles, gradient: 'from-blue-500/20 via-cyan-500/20 to-blue-600/20' },
     { id: 2, title: 'Services', items: ['Corporate Videos', 'Wedding Films', 'Product Photography', 'Social Media Content', 'Brand Storytelling', 'Event Coverage'], icon: Star, gradient: 'from-purple-500/20 via-pink-500/20 to-purple-600/20' },
     { id: 3, title: 'Gears', items: ['Sony A7 III', 'DJI Ronin', 'Godox Lighting', 'Rode Mic', 'MacBook Pro', 'Color Grading Monitor'], icon: Camera, gradient: 'from-emerald-500/20 via-teal-500/20 to-green-600/20' },
-    { id: 4, title: 'Tools', items: ['Adobe Premiere Pro', 'After Effects', 'Photoshop', 'Lightroom', 'DaVinci Resolve', 'Final Cut Pro', 'CapCut', 'VN Editor'], icon: Monitor, gradient: 'from-orange-500/20 via-amber-500/20 to-red-500/20' },
-    { id: 5, title: 'Connect', items: ['Instagram: dhyey.237', 'Instagram: kahin.door', 'Upwork Portfolio', 'Stock Images', 'WhatsApp'], icon: Heart, gradient: 'from-rose-500/20 via-pink-500/20 to-fuchsia-500/20' }
+    { id: 4, title: 'Tools', items: ['Adobe Premiere Pro', 'After Effects', 'Photoshop', 'Lightroom', 'DaVinci Resolve', 'Final Cut Pro', 'CapCut', 'VN Editor'], icon: Monitor, gradient: 'from-orange-500/20 via-amber-500/20 to-red-500/20' }
   ];
 
   const tools = [
@@ -258,8 +282,11 @@ const Portfolio = () => {
             <h2 className="text-4xl md:text-6xl font-bold text-center mb-12 md:mb-20 bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">My Work</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {Array.from({ length: 24 }).map((_, idx) => (
-                <div key={idx} className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer border border-white/[0.05] hover:border-white/[0.15] transition-all duration-500">
-                  <img src={`${IMAGES.gallery[idx % IMAGES.gallery.length]}?w=400`} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+                <div key={idx} className="group relative rounded-2xl overflow-hidden cursor-pointer border border-white/[0.05] hover:border-white/[0.15] transition-all duration-500">
+                  {/* Use portrait ratio: 3:4 (height greater than width) */}
+                  <div className="w-full" style={{ paddingTop: '133%' }}>
+                    <img src={`${IMAGES.gallery[idx % IMAGES.gallery.length]}?w=800`} alt={`Gallery ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover" style={{ position: 'absolute', top: 0, left: 0 }} />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
                   <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-md transition-all duration-500" />
                   <div className="absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">

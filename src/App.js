@@ -1,6 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, Film, Palette, Aperture, Instagram, MessageCircle, Mail, ExternalLink, Sparkles, Zap, Star, Award, Video, FileImage, Monitor, Heart } from 'lucide-react';
 
+// Centralized image URLs so you can change them in one place
+const IMAGES = {
+  heroBackground: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920',
+  heroAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500',
+  // Skill card background images (indexed by skill index 0..)
+  skillBackgrounds: [
+    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f?w=600',
+    'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600',
+    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
+    'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600'
+  ],
+  // Gallery images (24) - replace any of these URLs to update the gallery
+  gallery: [
+    'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
+    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd',
+    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f',
+    'https://images.unsplash.com/photo-1556761175-4b46a572b786',
+    'https://images.unsplash.com/photo-1542038382126-3e36f93c3a5c',
+    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
+    'https://images.unsplash.com/photo-1485846234815-bf3f6a63d9ae',
+    'https://images.unsplash.com/photo-1452587925148-ce544e77e70d',
+    'https://images.unsplash.com/photo-1606857521015-7f9fcf423740',
+    'https://images.unsplash.com/photo-1567095761054-7a02e69e5c43',
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64',
+    'https://images.unsplash.com/photo-1612198188060-f6d2c0ab2550',
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36',
+    'https://images.unsplash.com/photo-1626785774573-4b799315345d',
+    'https://images.unsplash.com/photo-1515705576-fbfd5641b5d6',
+    'https://images.unsplash.com/photo-1470093851219-69c8c7c6c6c0',
+    'https://images.unsplash.com/photo-1469827160215-9d29e96e72f4',
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+    'https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5',
+    'https://images.unsplash.com/photo-1515378791036-0648a3336e77',
+    'https://images.unsplash.com/photo-1554048612-b6a482bc67e0',
+    'https://images.unsplash.com/photo-1527576539890-dfa815648363',
+    'https://images.unsplash.com/photo-1611162617474-5b21e879e113',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
+  ]
+};
+
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('hero');
   const [hoveredSkill, setHoveredSkill] = useState(null);
@@ -131,16 +172,16 @@ const Portfolio = () => {
         </div>
       </nav>
 
-      <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10 pt-32"> {/* Added pt-32 for navbar spacing */}
+      <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10 pt-25"> {/* Added pt-32 for navbar spacing */}
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920" alt="Background" className="w-full h-full object-cover" />
+          <img src={IMAGES.heroBackground} alt="Background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
         </div>
         
         <div className="relative z-10 max-w-6xl w-full mx-auto text-center flex flex-col items-center">
           <div className="relative inline-block mb-8">
             <div className="w-72 h-72 mx-auto rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl bg-gradient-to-b from-black/60 via-black/30 to-transparent">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="Dhyey Patel" className="w-full h-full object-cover" />
+              <img src={IMAGES.heroAvatar} alt="Dhyey Patel" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
             </div>
           </div>
@@ -173,7 +214,7 @@ const Portfolio = () => {
                 const SkillIcon = skill.icon;
                 return (
                   <div key={skill.id} className="relative group cursor-pointer w-full" onMouseEnter={() => setHoveredSkill(skill.id)} onMouseLeave={() => setHoveredSkill(null)}>
-                    <div className="relative h-[450px] md:h-[550px] lg:h-[600px] rounded-3xl overflow-hidden border border-white/[0.05]" style={{ backgroundImage: `url(https://images.unsplash.com/photo-${skill.id === 1 ? '1574717024653-61fd2cf4d44f' : skill.id === 2 ? '1556761175-4b46a572b786' : skill.id === 3 ? '1502920917128-1aa500764cbd' : skill.id === 4 ? '1498050108023-c5249f4df085' : '1611162617474-5b21e879e113'}?w=600)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    <div className="relative h-[450px] md:h-[550px] lg:h-[600px] rounded-3xl overflow-hidden border border-white/[0.05]" style={{ backgroundImage: `url(${IMAGES.skillBackgrounds[(skill.id - 1) % IMAGES.skillBackgrounds.length]})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                       <div className={`absolute inset-0 bg-gradient-to-t ${skill.gradient} ${hoveredSkill === skill.id ? 'opacity-70' : 'opacity-30'} transition-all duration-700`} />
                       <div className={`absolute inset-0 ${hoveredSkill === skill.id ? 'backdrop-blur-3xl' : 'backdrop-blur-0'} transition-all duration-700`} />
                       <div className={`absolute bottom-0 inset-x-0 p-4 md:p-6 ${hoveredSkill === skill.id ? 'opacity-0 translate-y-8 scale-95' : 'opacity-100 translate-y-0 scale-100'} transition-all duration-700 ease-out`}>
@@ -238,7 +279,7 @@ const Portfolio = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {Array.from({ length: 24 }).map((_, idx) => (
                 <div key={idx} className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer border border-white/[0.05] hover:border-white/[0.15] transition-all duration-500">
-                  <img src={`https://images.unsplash.com/photo-${['1492691527719-9d1e07e534b4', '1502920917128-1aa500764cbd', '1574717024653-61fd2cf4d44f', '1556761175-4b46a572b786', '1542038382126-3e36f93c3a5c', '1516035069371-29a1b244cc32', '1485846234815-bf3f6a63d9ae', '1452587925148-ce544e77e70d', '1606857521015-7f9fcf423740', '1567095761054-7a02e69e5c43', '1558618666-fcd25c85cd64', '1612198188060-f6d2c0ab2550', '1524758631624-e2822e304c36', '1626785774573-4b799315345d', '1515705576-fbfd5641b5d6', '1470093851219-69c8c7c6c6c0', '1469827160215-9d29e96e72f4', '1506905925346-21bda4d32df4', '1560169897-fc0cdbdfa4d5', '1515378791036-0648a3336e77', '1554048612-b6a482bc67e0', '1527576539890-dfa815648363', '1611162617474-5b21e879e113', '1498050108023-c5249f4df085'][idx % 24]}?w=400`} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img src={`${IMAGES.gallery[idx % IMAGES.gallery.length]}?w=400`} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
                   <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-md transition-all duration-500" />
                   <div className="absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">

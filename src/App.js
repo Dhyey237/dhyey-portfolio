@@ -3,43 +3,18 @@ import { Camera, Film, Palette, Aperture, Instagram, MessageCircle, Mail, Extern
 
 // Centralized image URLs so you can change them in one place
 const IMAGES = {
-  heroBackground: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920',
-  heroAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500',
-  // Skill card background images (indexed by skill index 0..)
+  heroBackground: '/images/hero/bg.jpg',
+  heroAvatar: '/images/hero/avatar.jpg',
   skillBackgrounds: [
-    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f?w=600',
-    'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600',
-    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
-    'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600'
+    '/images/skills/skill-1.jpg',
+    '/images/skills/skill-2.jpg',
+    '/images/skills/skill-3.jpg',
+    '/images/skills/skill-4.jpg',
+    '/images/skills/skill-5.jpg',
   ],
   // Gallery images (24) - replace any of these URLs to update the gallery
-  gallery: [
-    'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
-    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd',
-    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f',
-    'https://images.unsplash.com/photo-1556761175-4b46a572b786',
-    'https://images.unsplash.com/photo-1542038382126-3e36f93c3a5c',
-    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
-    'https://images.unsplash.com/photo-1485846234815-bf3f6a63d9ae',
-    'https://images.unsplash.com/photo-1452587925148-ce544e77e70d',
-    'https://images.unsplash.com/photo-1606857521015-7f9fcf423740',
-    'https://images.unsplash.com/photo-1567095761054-7a02e69e5c43',
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64',
-    'https://images.unsplash.com/photo-1612198188060-f6d2c0ab2550',
-    'https://images.unsplash.com/photo-1524758631624-e2822e304c36',
-    'https://images.unsplash.com/photo-1626785774573-4b799315345d',
-    'https://images.unsplash.com/photo-1515705576-fbfd5641b5d6',
-    'https://images.unsplash.com/photo-1470093851219-69c8c7c6c6c0',
-    'https://images.unsplash.com/photo-1469827160215-9d29e96e72f4',
-    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
-    'https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5',
-    'https://images.unsplash.com/photo-1515378791036-0648a3336e77',
-    'https://images.unsplash.com/photo-1554048612-b6a482bc67e0',
-    'https://images.unsplash.com/photo-1527576539890-dfa815648363',
-    'https://images.unsplash.com/photo-1611162617474-5b21e879e113',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
-  ]
+  // Expect gallery images to live in public/images/gallery/1.jpg ... 24.jpg
+  gallery: Array.from({ length: 24 }).map((_, i) => `/images/gallery/${i + 1}.jpg`)
 };
 
 const Portfolio = () => {
@@ -172,25 +147,30 @@ const Portfolio = () => {
         </div>
       </nav>
 
-      <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10 pt-25"> {/* Added pt-32 for navbar spacing */}
+  <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10 pt-32"> {/* top padding for navbar spacing */}
         <div className="absolute inset-0 z-0">
           <img src={IMAGES.heroBackground} alt="Background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
         </div>
         
         <div className="relative z-10 max-w-6xl w-full mx-auto text-center flex flex-col items-center">
-          <div className="relative inline-block mb-8">
-            <div className="w-72 h-72 mx-auto rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl bg-gradient-to-b from-black/60 via-black/30 to-transparent">
-              <img src={IMAGES.heroAvatar} alt="Dhyey Patel" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+          <div className="w-full max-w-3xl relative">
+            {/* Avatar overlaps the top of the card for an aesthetic look */}
+            <div className="absolute left-1/2 -translate-x-1/2 -top-28">
+              <div className="w-40 h-40 md:w-72 md:h-72 rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl bg-black">
+                <img src={IMAGES.heroAvatar} alt="Dhyey Patel" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              </div>
+            </div>
+
+            <div className="pt-32 px-6 pb-8 bg-white/[0.03] backdrop-blur-3xl rounded-3xl border border-white/[0.08] shadow-2xl mb-12 mx-auto relative z-10">
+              <h1 className="text-5xl md:text-7xl font-bold mb-2 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">Dhyey Patel</h1>
+              <p className="text-lg md:text-2xl mb-6 text-white/70 font-light">Video Editor | Photographer | Storyteller</p>
+              <p className="text-base leading-relaxed text-white/60">Crafting visual stories that captivate and inspire. With a passion for cinematography and an eye for detail, I transform moments into timeless memories through the art of video editing and photography.</p>
+              <p className="text-sm leading-relaxed text-white/50 mt-4">Specializing in color grading, motion graphics, and creative storytelling. Every frame tells a story, and I'm here to make yours unforgettable.</p>
             </div>
           </div>
-          <h1 className="text-7xl font-bold mb-4 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">Dhyey Patel</h1>
-          <p className="text-2xl mb-8 text-white/70 font-light">Video Editor | Photographer | Storyteller</p>
-          <div className="max-w-3xl mx-auto p-8 bg-white/[0.03] backdrop-blur-3xl rounded-3xl border border-white/[0.08] shadow-2xl mb-12 relative z-10">
-            <p className="text-lg leading-relaxed text-white/70 mb-6">Crafting visual stories that captivate and inspire. With a passion for cinematography and an eye for detail, I transform moments into timeless memories through the art of video editing and photography.</p>
-            <p className="text-base leading-relaxed text-white/60">Specializing in color grading, motion graphics, and creative storytelling. Every frame tells a story, and I'm here to make yours unforgettable.</p>
-          </div>
+
           <div className="flex flex-wrap justify-center gap-4 mb-8 relative z-30">
             {keywords.map((keyword, idx) => (
               <div key={idx} className="group px-6 py-3 bg-white/[0.03] backdrop-blur-3xl rounded-full border border-white/[0.08] hover:bg-white/[0.06] hover:backdrop-blur-2xl hover:scale-110 hover:border-white/[0.15] transition-all duration-500 cursor-pointer relative overflow-hidden">

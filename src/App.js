@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Camera, Film, Palette, Aperture, Instagram, MessageCircle, Mail, ExternalLink, Sparkles, Zap, Star, Video, FileImage, Monitor, ArrowRight } from 'lucide-react';
 
 // ==========================================
 // IMAGE IMPORTS - CUSTOMIZE YOUR IMAGES HERE
 // ==========================================
+// Replace these import paths with your actual image paths
 import heroBg from './Images/hero/bg1.jpg';
 import heroAvatar from './Images/hero/0.jpg';
 
@@ -32,7 +33,7 @@ import g17 from './Images/gallery/IMG_7613.jpg';
 import g18 from './Images/gallery/PXL_20250706_025430795.jpg';
 
 // ==========================================
-// IMAGE CONFIGURATION
+// IMAGE CONFIGURATION - EDIT IMAGES HERE
 // ==========================================
 const IMAGES = {
   heroBackground: heroBg,
@@ -50,47 +51,48 @@ const Portfolio = () => {
   const [hoveredTool, setHoveredTool] = useState(null);
   const [clientForm, setClientForm] = useState({ name: '', email: '', message: '' });
   const [queryForm, setQueryForm] = useState({ name: '', query: '' });
-  const scrollTimeout = useRef(null);
+  const [hoveredNav, setHoveredNav] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // ==========================================
-  // OPTIMIZED SCROLL HANDLER - DEBOUNCED
+  // ENHANCED SCROLL & MOUSE TRACKING
   // ==========================================
   useEffect(() => {
-    const handleScroll = () => {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+    const timer = setTimeout(() => setIsLoading(false), 500);
 
-      scrollTimeout.current = setTimeout(() => {
-        const sections = ['hero', 'skills', 'tools', 'gallery', 'contact'];
-        const current = sections.find(section => {
-          const element = document.getElementById(section);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            return rect.top <= 150 && rect.bottom >= 150;
-          }
-          return false;
-        });
-        if (current && current !== activeSection) {
-          setActiveSection(current);
+    const handleScroll = () => {
+      const sections = ['hero', 'skills', 'tools', 'gallery', 'contact'];
+      const current = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 150 && rect.bottom >= 150;
         }
-      }, 100);
+        return false;
+      });
+      if (current) setActiveSection(current);
+    };
+
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+      window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [activeSection]);
+  }, []);
 
   // ==========================================
   // SMOOTH SCROLL TO SECTION
   // ==========================================
-  const scrollToSection = useCallback((id) => {
+  const scrollToSection = (id) => {
+    setActiveSection(id);
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
@@ -98,12 +100,12 @@ const Portfolio = () => {
       const offsetPosition = elementPosition + window.pageYOffset - offset;
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     }
-  }, []);
+  };
 
   // ==========================================
   // WHATSAPP FORM HANDLERS
   // ==========================================
-  const handleClientSubmit = useCallback(() => {
+  const handleClientSubmit = () => {
     if (!clientForm.name || !clientForm.email || !clientForm.message) {
       alert('Please fill in all fields');
       return;
@@ -111,9 +113,9 @@ const Portfolio = () => {
     const message = `New Client Inquiry:\nName: ${clientForm.name}\nEmail: ${clientForm.email}\nMessage: ${clientForm.message}`;
     window.open(`https://wa.me/919879672277?text=${encodeURIComponent(message)}`, '_blank');
     setClientForm({ name: '', email: '', message: '' });
-  }, [clientForm]);
+  };
 
-  const handleQuerySubmit = useCallback(() => {
+  const handleQuerySubmit = () => {
     if (!queryForm.name || !queryForm.query) {
       alert('Please fill in all fields');
       return;
@@ -121,10 +123,10 @@ const Portfolio = () => {
     const message = `Quick Query:\nName: ${queryForm.name}\nQuery: ${queryForm.query}`;
     window.open(`https://wa.me/919879672277?text=${encodeURIComponent(message)}`, '_blank');
     setQueryForm({ name: '', query: '' });
-  }, [queryForm]);
+  };
 
   // ==========================================
-  // CONTENT CONFIGURATION
+  // CONTENT CONFIGURATION - EDIT TEXT HERE
   // ==========================================
   const PERSONAL_INFO = {
     name: 'Dhyey Patel',
@@ -139,44 +141,48 @@ const Portfolio = () => {
       id: 1, 
       title: 'Skills', 
       items: ['Video Editing', 'Color Grading', 'Storytelling', 'Photography', 'Cinematography', 'Motion Graphics', 'Audio Design'], 
-      icon: Sparkles
+      icon: Sparkles, 
+      gradient: 'from-blue-500/30 via-cyan-500/30 to-blue-600/30' 
     },
     { 
       id: 2, 
       title: 'Services', 
       items: ['Corporate Videos', 'Wedding Films', 'Product Photography', 'Social Media Content', 'Brand Storytelling', 'Event Coverage'], 
-      icon: Star
+      icon: Star, 
+      gradient: 'from-purple-500/30 via-pink-500/30 to-purple-600/30' 
     },
     { 
       id: 3, 
       title: 'Gears', 
       items: ['Sony A7 III', 'DJI Ronin', 'Godox Lighting', 'Rode Mic', 'MacBook Pro', 'Color Grading Monitor'], 
-      icon: Camera
+      icon: Camera, 
+      gradient: 'from-emerald-500/30 via-teal-500/30 to-green-600/30' 
     },
     { 
       id: 4, 
       title: 'Tools', 
       items: ['Adobe Premiere Pro', 'After Effects', 'Photoshop', 'Lightroom', 'DaVinci Resolve', 'Final Cut Pro', 'CapCut', 'VN Editor'], 
-      icon: Monitor
+      icon: Monitor, 
+      gradient: 'from-orange-500/30 via-amber-500/30 to-red-500/30' 
     }
   ];
 
   const tools = [
-    { name: 'Premiere Pro', icon: '🎬' },
-    { name: 'After Effects', icon: '✨' },
-    { name: 'Photoshop', icon: '🎨' },
-    { name: 'Lightroom', icon: '📸' },
-    { name: 'DaVinci', icon: '🎞️' },
-    { name: 'Final Cut', icon: '⚡' },
-    { name: 'CapCut', icon: '✂️' },
-    { name: 'VN Editor', icon: '🎥' }
+    { name: 'Premiere Pro', icon: '🎬', gradient: 'from-purple-600/40 to-purple-800/40' },
+    { name: 'After Effects', icon: '✨', gradient: 'from-blue-600/40 to-blue-800/40' },
+    { name: 'Photoshop', icon: '🎨', gradient: 'from-cyan-600/40 to-cyan-800/40' },
+    { name: 'Lightroom', icon: '📸', gradient: 'from-indigo-600/40 to-indigo-800/40' },
+    { name: 'DaVinci', icon: '🎞️', gradient: 'from-red-600/40 to-red-800/40' },
+    { name: 'Final Cut', icon: '⚡', gradient: 'from-orange-600/40 to-orange-800/40' },
+    { name: 'CapCut', icon: '✂️', gradient: 'from-pink-600/40 to-pink-800/40' },
+    { name: 'VN Editor', icon: '🎥', gradient: 'from-green-600/40 to-green-800/40' }
   ];
 
   const socialLinks = [
-    { name: 'Instagram', subtext: '@dhyey.237', icon: Instagram, link: 'https://instagram.com/dhyey.237' },
-    { name: 'Upwork', subtext: 'Hire Me', icon: ExternalLink, link: '#' },
-    { name: 'Stock Images', subtext: 'Portfolio', icon: FileImage, link: '#' },
-    { name: 'WhatsApp', subtext: 'Chat Now', icon: MessageCircle, link: 'https://wa.me/919879672277' }
+    { name: 'Instagram', subtext: '@dhyey.237', icon: Instagram, link: 'https://instagram.com/dhyey.237', gradient: 'from-purple-600/40 to-pink-700/40' },
+    { name: 'Upwork', subtext: 'Hire Me', icon: ExternalLink, link: '#', gradient: 'from-green-600/40 to-emerald-700/40' },
+    { name: 'Stock Images', subtext: 'Portfolio', icon: FileImage, link: '#', gradient: 'from-blue-600/40 to-cyan-700/40' },
+    { name: 'WhatsApp', subtext: 'Chat Now', icon: MessageCircle, link: 'https://wa.me/919879672277', gradient: 'from-green-700/40 to-green-600/40' }
   ];
 
   const keywords = [
@@ -188,99 +194,66 @@ const Portfolio = () => {
     { name: 'Motion Graphics', icon: Zap },
   ];
 
+  // ==========================================
+  // LOADING SCREEN
+  // ==========================================
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative w-20 h-20 mx-auto mb-6">
+            <div className="absolute inset-0 border-4 border-white/10 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
+          </div>
+          <p className="text-white/60 text-sm font-medium">Loading Portfolio...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* ========================================== */}
-      {/* OPTIMIZED STYLES */}
+      {/* CUSTOM ANIMATIONS & STYLES */}
       {/* ========================================== */}
       <style>{`
-        * {
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
         }
-        
-        /* Optimized image loading */
-        img {
-          content-visibility: auto;
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
         }
-        
-        /* Smooth transitions */
-        .smooth-transition {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Gallery instant hover */
-        .gallery-item {
-          transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-        
-        .gallery-item:hover {
-          transform: translateY(-4px);
-        }
-        
-        .gallery-image {
-          transition: transform 0.4s ease;
-        }
-        
-        .gallery-item:hover .gallery-image {
-          transform: scale(1.08);
-        }
-        
-        .gallery-overlay {
-          transition: opacity 0.3s ease;
-        }
-        
-        .gallery-item:hover .gallery-overlay {
-          opacity: 1;
-        }
-        
-        .gallery-label {
-          transition: all 0.3s ease;
-        }
-        
-        .gallery-item:hover .gallery-label {
-          transform: translateY(0);
-          opacity: 1;
-        }
-        
-        /* Skills section smooth hover */
-        .skill-card {
-          transition: all 0.3s ease;
-        }
-        
-        .skill-image {
-          transition: transform 0.5s ease;
-        }
-        
-        .skill-card:hover .skill-image {
-          transform: scale(1.1);
-        }
-        
-        .skill-blur {
-          transition: backdrop-filter 0.3s ease;
-        }
-        
-        .skill-card:hover .skill-blur {
-          backdrop-filter: blur(2px);
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
         }
       `}</style>
 
       {/* ========================================== */}
-      {/* BACKGROUND */}
+      {/* ENHANCED BACKGROUND WITH MOUSE TRACKING */}
       {/* ========================================== */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-20 left-10 w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl" />
         <div className="absolute top-40 right-10 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl" />
         <div className="absolute bottom-20 left-1/2 w-96 h-96 bg-cyan-600/20 rounded-full mix-blend-screen filter blur-3xl" />
+        
+        {/* Mouse-following gradient spotlight */}
+        <div 
+          className="absolute w-[600px] h-[600px] bg-gradient-radial from-white/5 via-transparent to-transparent rounded-full blur-3xl pointer-events-none transition-all duration-700 ease-out"
+          style={{
+            left: mousePosition.x - 300 + 'px',
+            top: mousePosition.y - 300 + 'px',
+          }}
+        />
       </div>
 
       {/* ========================================== */}
-      {/* NAVIGATION BAR */}
+      {/* ENHANCED NAVIGATION BAR */}
       {/* ========================================== */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-3 md:px-6 py-3 bg-black/40 backdrop-blur-2xl rounded-full border border-white/10 shadow-2xl max-w-[95vw]">
         <div className="flex gap-2 md:gap-4 items-center">
@@ -294,7 +267,9 @@ const Portfolio = () => {
             <button 
               key={item.id} 
               onClick={() => scrollToSection(item.id)} 
-              className={`relative px-4 md:px-6 py-2.5 rounded-full smooth-transition ${
+              onMouseEnter={() => setHoveredNav(item.id)} 
+              onMouseLeave={() => setHoveredNav(null)} 
+              className={`relative px-4 md:px-6 py-2.5 rounded-full transition-all duration-300 ${
                 activeSection === item.id 
                   ? 'bg-white text-black shadow-lg scale-105' 
                   : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -307,32 +282,33 @@ const Portfolio = () => {
       </nav>
 
       {/* ========================================== */}
-      {/* HERO SECTION */}
+      {/* HERO SECTION - ENHANCED */}
       {/* ========================================== */}
       <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden pt-32 pb-20">
+        {/* Enhanced Background */}
         <div className="absolute inset-0 z-0">
           <img 
             src={IMAGES.heroBackground} 
             alt="Background" 
             className="w-full h-full object-cover scale-105" 
-            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black" />
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-pink-900/20" />
         </div>
         
         <div className="relative z-10 max-w-5xl w-full mx-auto text-center">
+          {/* Enhanced Avatar - 50% bigger, no border */}
           <div className="mb-10 opacity-0 animate-[fadeIn_0.8s_ease-out_0.2s_forwards]">
             <div className="w-52 h-52 md:w-80 md:h-80 rounded-full overflow-hidden shadow-2xl mx-auto">
               <img 
                 src={IMAGES.heroAvatar} 
                 alt={PERSONAL_INFO.name} 
-                className="w-full h-full object-cover smooth-transition hover:scale-110" 
-                loading="eager"
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
               />
             </div>
           </div>
 
+          {/* Enhanced Name Card */}
           <div className="mb-10 opacity-0 animate-[fadeIn_0.8s_ease-out_0.4s_forwards]">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tight">
               <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-2xl">
@@ -344,7 +320,8 @@ const Portfolio = () => {
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto mb-12 px-8 py-10 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl opacity-0 animate-[fadeIn_0.8s_ease-out_0.6s_forwards] smooth-transition hover:bg-white/8">
+          {/* Enhanced Bio Card */}
+          <div className="max-w-3xl mx-auto mb-12 px-8 py-10 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl opacity-0 animate-[fadeIn_0.8s_ease-out_0.6s_forwards] hover:bg-white/8 transition-all duration-500">
             <p className="text-base md:text-lg leading-relaxed text-white/90 mb-5">
               {PERSONAL_INFO.bio1}
             </p>
@@ -353,20 +330,22 @@ const Portfolio = () => {
             </p>
           </div>
 
+          {/* Enhanced Keywords */}
           <div className="flex flex-wrap justify-center gap-4 opacity-0 animate-[fadeIn_0.8s_ease-out_0.8s_forwards]">
             {keywords.map((keyword, idx) => (
               <div 
                 key={idx} 
-                className="group px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 smooth-transition hover:bg-white/10 hover:scale-110 hover:border-white/20 cursor-pointer"
+                className="group px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 hover:bg-white/10 hover:scale-110 hover:border-white/20 transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                  <keyword.icon className="w-5 h-5 smooth-transition group-hover:scale-125 group-hover:rotate-12" />
+                  <keyword.icon className="w-5 h-5 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
                   <span className="font-semibold text-sm">{keyword.name}</span>
                 </div>
               </div>
             ))}
           </div>
 
+          {/* Scroll Indicator */}
           <div className="mt-16 opacity-0 animate-[fadeIn_0.8s_ease-out_1s_forwards]">
             <div className="animate-bounce">
               <ArrowRight className="w-6 h-6 mx-auto rotate-90 text-white/50" />
@@ -376,7 +355,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* SKILLS SECTION */}
+      {/* SKILLS SECTION - WITH GALLERY-STYLE HOVER */}
       {/* ========================================== */}
       <section id="skills" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 bg-black">
         <div className="w-full max-w-[1800px] mx-auto">
@@ -393,14 +372,23 @@ const Portfolio = () => {
               return (
                 <div 
                   key={skill.id} 
-                  className="skill-card group relative cursor-pointer h-[70vh] min-h-[500px]" 
+                  className="group relative cursor-pointer h-[70vh] min-h-[500px]" 
                   onMouseEnter={() => setHoveredSkill(skill.id)} 
                   onMouseLeave={() => setHoveredSkill(null)}
                 >
-                  <div className="relative h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                  {/* Card Container */}
+                  <div 
+                    className="relative h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
+                    style={{ 
+                      backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
+                      backgroundSize: 'cover', 
+                      backgroundPosition: 'center' 
+                    }}
+                  >
+                    {/* Image scales on hover like gallery */}
                     <div className="absolute inset-0 overflow-hidden">
                       <div 
-                        className="skill-image w-full h-full"
+                        className="w-full h-full group-hover:scale-110 transition-transform duration-500"
                         style={{ 
                           backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
                           backgroundSize: 'cover', 
@@ -409,23 +397,31 @@ const Portfolio = () => {
                       />
                     </div>
                     
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 smooth-transition" />
+                    {/* Overlay - INSTANT transition */}
+                    <div className={`absolute inset-0 bg-gradient-to-t ${skill.gradient} transition-all duration-200 ${
+                      hoveredSkill === skill.id ? 'opacity-60' : 'opacity-30'
+                    }`} />
                     
-                    <div className="skill-blur absolute inset-0" />
+                    {/* Blur Effect - INSTANT transition */}
+                    <div className={`absolute inset-0 transition-all duration-200 ${
+                      hoveredSkill === skill.id ? 'backdrop-blur-sm' : 'backdrop-blur-0'
+                    }`} />
                     
-                    <div className={`absolute bottom-0 inset-x-0 p-6 smooth-transition ${
-                      hoveredSkill === skill.id ? 'translate-y-4 opacity-0' : 'translate-y-0 opacity-100'
+                    {/* Bottom Label - Maximum transparency */}
+                    <div className={`absolute bottom-0 inset-x-0 p-6 transition-all duration-200 ${
+                      hoveredSkill === skill.id ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
                     }`}>
-                      <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-5 border border-white/20">
+                      <div className="bg-black/15 backdrop-blur-2xl rounded-2xl p-5 border border-white/5">
                         <SkillIcon className="w-8 h-8 mx-auto mb-3" />
                         <h3 className="font-bold text-2xl text-white text-center drop-shadow-lg">{skill.title}</h3>
                       </div>
                     </div>
                     
-                    <div className={`absolute inset-0 flex items-center justify-center p-6 smooth-transition ${
-                      hoveredSkill === skill.id ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                    {/* Hover Content - INSTANT transition */}
+                    <div className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-200 ${
+                      hoveredSkill === skill.id ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
                     }`}>
-                      <div className="bg-black/50 backdrop-blur-xl rounded-3xl p-6 border border-white/20 w-full max-w-sm">
+                      <div className="bg-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/15 w-full">
                         <div className="flex items-center justify-center gap-3 mb-6">
                           <SkillIcon className="w-10 h-10" />
                           <h3 className="font-bold text-3xl">{skill.title}</h3>
@@ -434,7 +430,7 @@ const Portfolio = () => {
                           {skill.items.map((item, idx) => (
                             <div 
                               key={idx} 
-                              className="text-sm bg-white/10 rounded-xl px-4 py-3 border border-white/20 text-center font-medium smooth-transition hover:bg-white/20 hover:scale-105"
+                              className="text-sm bg-white/10 rounded-xl px-4 py-3 border border-white/15 text-center font-medium hover:bg-white/20 hover:scale-105 transition-all duration-200"
                             >
                               {item}
                             </div>
@@ -451,10 +447,11 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* TOOLS & HANDLES SECTION */}
+      {/* TOOLS & HANDLES SECTION - ENHANCED */}
       {/* ========================================== */}
       <section id="tools" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 bg-gradient-to-b from-black via-gray-900/20 to-black">
         <div className="w-full max-w-[1800px] mx-auto">
+          {/* Software Tools */}
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-center mb-12">
             <span className="bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent">
               My Creative Arsenal
@@ -465,18 +462,19 @@ const Portfolio = () => {
             {tools.map((tool, idx) => (
               <div 
                 key={idx} 
-                className="group relative px-8 py-6 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 cursor-pointer smooth-transition hover:scale-110 hover:bg-white/10 hover:shadow-2xl hover:border-white/20" 
+                className="group relative px-8 py-6 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:shadow-2xl hover:border-white/20" 
                 onMouseEnter={() => setHoveredTool(tool.name)} 
                 onMouseLeave={() => setHoveredTool(null)}
               >
                 <div className="relative z-10">
-                  <div className="text-5xl mb-3 smooth-transition group-hover:scale-125">{tool.icon}</div>
+                  <div className="text-5xl mb-3 group-hover:scale-125 transition-transform duration-300">{tool.icon}</div>
                   <div className="text-sm font-bold text-center">{tool.name}</div>
                 </div>
               </div>
             ))}
           </div>
           
+          {/* Social Handles - Enhanced */}
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-center mb-12">
             <span className="bg-gradient-to-r from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent">
               Let's Connect
@@ -490,10 +488,10 @@ const Portfolio = () => {
                 href={social.link} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="group relative p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 smooth-transition hover:bg-white/10 hover:scale-105 hover:border-white/20 text-center overflow-hidden"
+                className="group relative p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 hover:bg-white/10 hover:scale-105 hover:border-white/20 transition-all duration-300 text-center overflow-hidden"
               >
                 <div className="relative z-10">
-                  <social.icon className="w-12 h-12 mx-auto mb-4 smooth-transition group-hover:scale-110" />
+                  <social.icon className="w-12 h-12 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                   <div className="text-lg font-bold mb-1">{social.name}</div>
                   <div className="text-sm text-white/70">{social.subtext}</div>
                 </div>
@@ -504,7 +502,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* GALLERY SECTION - OPTIMIZED */}
+      {/* GALLERY SECTION - ENHANCED */}
       {/* ========================================== */}
       <section id="gallery" className="relative min-h-screen py-20 md:py-32 px-4 bg-black">
         <div className="max-w-7xl mx-auto">
@@ -521,20 +519,20 @@ const Portfolio = () => {
             {IMAGES.gallery.map((image, idx) => (
               <div 
                 key={idx} 
-                className="gallery-item relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-white/20"
+                className="group relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-white/20 transition-all duration-300"
               >
-                <div className="relative w-full" style={{ paddingTop: '133%' }}>
+                <div className="w-full" style={{ paddingTop: '133%' }}>
                   <img 
                     src={image}
                     alt={`Gallery ${idx + 1}`} 
-                    className="gallery-image absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                   />
-                  <div className="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0" />
-                  <div className="gallery-label absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0">
-                    <div className="bg-white/10 backdrop-blur-xl rounded-xl px-4 py-3 border border-white/20">
-                      <p className="text-sm font-bold">Photo {idx + 1}</p>
-                    </div>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300" />
+                <div className="absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="bg-white/10 backdrop-blur-xl rounded-xl px-4 py-3 border border-white/20">
+                    <p className="text-sm font-bold">Photo {idx + 1}</p>
                   </div>
                 </div>
               </div>
@@ -544,7 +542,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* CONTACT SECTION */}
+      {/* CONTACT SECTION - ENHANCED */}
       {/* ========================================== */}
       <section id="contact" className="relative min-h-screen py-20 md:py-32 px-4 bg-gradient-to-b from-black via-purple-900/10 to-black">
         <div className="max-w-4xl mx-auto">
@@ -556,7 +554,8 @@ const Portfolio = () => {
           <p className="text-center text-white/60 text-lg mb-12">Ready to bring your vision to life?</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 smooth-transition hover:bg-white/8 hover:border-white/20">
+            {/* Client Inquiry Form */}
+            <div className="p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 hover:bg-white/8 hover:border-white/20 transition-all duration-500">
               <h3 className="text-3xl font-bold mb-6 flex items-center gap-3">
                 <MessageCircle className="w-8 h-8" />
                 Client Inquiry
@@ -567,32 +566,33 @@ const Portfolio = () => {
                   placeholder="Your Name" 
                   value={clientForm.name} 
                   onChange={(e) => setClientForm({...clientForm, name: e.target.value})} 
-                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none smooth-transition placeholder-white/40" 
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none transition-all duration-300 placeholder-white/40" 
                 />
                 <input 
                   type="email" 
                   placeholder="Your Email" 
                   value={clientForm.email} 
                   onChange={(e) => setClientForm({...clientForm, email: e.target.value})} 
-                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none smooth-transition placeholder-white/40" 
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none transition-all duration-300 placeholder-white/40" 
                 />
                 <textarea 
                   placeholder="Tell me about your project..." 
                   rows="4" 
                   value={clientForm.message} 
                   onChange={(e) => setClientForm({...clientForm, message: e.target.value})} 
-                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none smooth-transition placeholder-white/40 resize-none" 
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none transition-all duration-300 placeholder-white/40 resize-none" 
                 />
                 <button 
                   onClick={handleClientSubmit} 
-                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold smooth-transition hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
+                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
                 >
                   Send via WhatsApp
                 </button>
               </div>
             </div>
 
-            <div className="p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 smooth-transition hover:bg-white/8 hover:border-white/20">
+            {/* Quick Query Form */}
+            <div className="p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 hover:bg-white/8 hover:border-white/20 transition-all duration-500">
               <h3 className="text-3xl font-bold mb-6 flex items-center gap-3">
                 <Mail className="w-8 h-8" />
                 Quick Query
@@ -603,18 +603,18 @@ const Portfolio = () => {
                   placeholder="Your Name" 
                   value={queryForm.name} 
                   onChange={(e) => setQueryForm({...queryForm, name: e.target.value})} 
-                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none smooth-transition placeholder-white/40" 
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none transition-all duration-300 placeholder-white/40" 
                 />
                 <textarea 
                   placeholder="What would you like to know?" 
                   rows="6" 
                   value={queryForm.query} 
                   onChange={(e) => setQueryForm({...queryForm, query: e.target.value})} 
-                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none smooth-transition placeholder-white/40 resize-none" 
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 focus:border-white/30 focus:bg-white/8 focus:outline-none transition-all duration-300 placeholder-white/40 resize-none" 
                 />
                 <button 
                   onClick={handleQuerySubmit} 
-                  className="w-full px-6 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl font-bold smooth-transition hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50"
+                  className="w-full px-6 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl font-bold hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300"
                 >
                   Send Query
                 </button>
@@ -635,7 +635,7 @@ const Portfolio = () => {
               href="https://instagram.com/dhyey.237" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-white/40 smooth-transition hover:text-white hover:scale-125"
+              className="text-white/40 hover:text-white hover:scale-125 transition-all duration-300"
               aria-label="Instagram"
             >
               <Instagram className="w-7 h-7" />
@@ -644,7 +644,7 @@ const Portfolio = () => {
               href={`https://wa.me/${PERSONAL_INFO.phone}`} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-white/40 smooth-transition hover:text-white hover:scale-125"
+              className="text-white/40 hover:text-white hover:scale-125 transition-all duration-300"
               aria-label="WhatsApp"
             >
               <MessageCircle className="w-7 h-7" />

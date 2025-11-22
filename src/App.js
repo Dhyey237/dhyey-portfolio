@@ -54,14 +54,41 @@ const Portfolio = () => {
   const [hoveredNav, setHoveredNav] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // ==========================================
+  // PRELOAD ALL IMAGES FOR INSTANT DISPLAY
+  // ==========================================
+  useEffect(() => {
+    const preloadImages = async () => {
+      const allImages = [
+        IMAGES.heroBackground,
+        IMAGES.heroAvatar,
+        ...IMAGES.skillBackgrounds,
+        ...IMAGES.gallery
+      ];
+
+      const imagePromises = allImages.map((src) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve; // Resolve even on error to not block
+          img.src = src;
+        });
+      });
+
+      await Promise.all(imagePromises);
+      setImagesLoaded(true);
+      setIsLoading(false);
+    };
+
+    preloadImages();
+  }, []);
 
   // ==========================================
   // OPTIMIZED SCROLL & MOUSE TRACKING
   // ==========================================
   useEffect(() => {
-    // Instant load - no artificial delay
-    setIsLoading(false);
-
     let ticking = false;
     
     const handleScroll = () => {
@@ -223,7 +250,8 @@ const Portfolio = () => {
             <div className="absolute inset-0 border-4 border-white/10 rounded-full"></div>
             <div className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
           </div>
-          <p className="text-white/60 text-sm font-medium">Loading Portfolio...</p>
+          <p className="text-white/60 text-sm font-medium">Loading Images...</p>
+          <p className="text-white/40 text-xs mt-2">Preloading all content for smooth experience</p>
         </div>
       </div>
     );
@@ -250,15 +278,29 @@ const Portfolio = () => {
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
-        /* Hardware acceleration for smooth transitions */
-        .skill-card-transform {
-          transform: translateZ(0);
-          will-change: transform;
+        /* Hardware acceleration for instant transitions */
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
-        /* Optimize image rendering */
         img {
           image-rendering: -webkit-optimize-contrast;
           image-rendering: crisp-edges;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+        }
+        /* Instant hover transitions */
+        .instant-hover {
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+          will-change: transform, opacity;
+        }
+        /* Remove blur lag */
+        .no-blur-lag {
+          will-change: backdrop-filter;
+        }
+        /* Preload and cache all images */
+        .preloaded-image {
+          content-visibility: auto;
         }
       `}</style>
 
@@ -397,10 +439,10 @@ const Portfolio = () => {
                 >
                   {/* Card Container */}
                   <div className="relative h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                    {/* Background Image with Scale Effect */}
+                    {/* Background Image with Scale Effect - NO BLUR */}
                     <div className="absolute inset-0 overflow-hidden">
                       <div 
-                        className="w-full h-full transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-full instant-hover group-hover:scale-110 preloaded-image"
                         style={{ 
                           backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
                           backgroundSize: 'cover', 
@@ -409,14 +451,11 @@ const Portfolio = () => {
                       />
                     </div>
                     
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-                    
-                    {/* Blur Effect on Hover */}
-                    <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300" />
+                    {/* Gradient Overlay - Instant transition */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 instant-hover" />
                     
                     {/* Bottom Label - Default State */}
-                    <div className="absolute bottom-0 inset-x-0 p-6 transform translate-y-0 opacity-100 group-hover:translate-y-4 group-hover:opacity-0 transition-all duration-300">
+                    <div className="absolute bottom-0 inset-x-0 p-6 transform translate-y-0 opacity-100 group-hover:translate-y-4 group-hover:opacity-0 instant-hover">
                       <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-5 border border-white/20">
                         <SkillIcon className="w-8 h-8 mx-auto mb-3" />
                         <h3 className="font-bold text-2xl text-white text-center drop-shadow-lg">{skill.title}</h3>
@@ -424,7 +463,7 @@ const Portfolio = () => {
                     </div>
                     
                     {/* Hover Content - Items List */}
-                    <div className="absolute inset-0 flex items-center justify-center p-6 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="absolute inset-0 flex items-center justify-center p-6 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 instant-hover">
                       <div className="bg-black/50 backdrop-blur-xl rounded-3xl p-6 border border-white/20 w-full max-w-sm">
                         <div className="flex items-center justify-center gap-3 mb-6">
                           <SkillIcon className="w-10 h-10" />
@@ -434,7 +473,7 @@ const Portfolio = () => {
                           {skill.items.map((item, idx) => (
                             <div 
                               key={idx} 
-                              className="text-sm bg-white/10 rounded-xl px-4 py-3 border border-white/20 text-center font-medium hover:bg-white/20 hover:scale-105 transition-all duration-200"
+                              className="text-sm bg-white/10 rounded-xl px-4 py-3 border border-white/20 text-center font-medium hover:bg-white/20 hover:scale-105 instant-hover"
                             >
                               {item}
                             </div>
@@ -523,18 +562,19 @@ const Portfolio = () => {
             {IMAGES.gallery.map((image, idx) => (
               <div 
                 key={idx} 
-                className="group relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-white/20 transition-all duration-300"
+                className="group relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-white/20 instant-hover"
               >
                 <div className="w-full" style={{ paddingTop: '133%' }}>
                   <img 
                     src={image}
                     alt={`Gallery ${idx + 1}`} 
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    loading="eager"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 instant-hover preloaded-image" 
+                    style={{ transform: 'translateZ(0)' }}
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300" />
-                <div className="absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 instant-hover" />
+                <div className="absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 instant-hover">
                   <div className="bg-white/10 backdrop-blur-xl rounded-xl px-4 py-3 border border-white/20">
                     <p className="text-sm font-bold">Photo {idx + 1}</p>
                   </div>

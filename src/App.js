@@ -59,7 +59,7 @@ const Portfolio = () => {
   // ENHANCED SCROLL & MOUSE TRACKING
   // ==========================================
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);
+    const timer = setTimeout(() => setIsLoading(false), 300);
 
     const handleScroll = () => {
       const sections = ['hero', 'skills', 'tools', 'gallery', 'contact'];
@@ -297,9 +297,9 @@ const Portfolio = () => {
         </div>
         
         <div className="relative z-10 max-w-5xl w-full mx-auto text-center">
-          {/* Enhanced Avatar - 30% bigger, no border */}
+          {/* Enhanced Avatar - 50% bigger, no border */}
           <div className="mb-10 opacity-0 animate-[fadeIn_0.8s_ease-out_0.2s_forwards]">
-            <div className="w-44 h-44 md:w-64 md:h-64 rounded-full overflow-hidden shadow-2xl mx-auto ring-4 ring-white/10">
+            <div className="w-52 h-52 md:w-80 md:h-80 rounded-full overflow-hidden shadow-2xl mx-auto">
               <img 
                 src={IMAGES.heroAvatar} 
                 alt={PERSONAL_INFO.name} 
@@ -355,7 +355,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* SKILLS SECTION - INSTANT HOVER, NO DELAY */}
+      {/* SKILLS SECTION - WITH GALLERY-STYLE HOVER */}
       {/* ========================================== */}
       <section id="skills" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 bg-black">
         <div className="w-full max-w-[1800px] mx-auto">
@@ -385,7 +385,19 @@ const Portfolio = () => {
                       backgroundPosition: 'center' 
                     }}
                   >
-                    {/* Overlay - INSTANT transition, no delay */}
+                    {/* Image scales on hover like gallery */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      <div 
+                        className="w-full h-full group-hover:scale-110 transition-transform duration-500"
+                        style={{ 
+                          backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
+                          backgroundSize: 'cover', 
+                          backgroundPosition: 'center' 
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Overlay - INSTANT transition */}
                     <div className={`absolute inset-0 bg-gradient-to-t ${skill.gradient} transition-all duration-200 ${
                       hoveredSkill === skill.id ? 'opacity-60' : 'opacity-30'
                     }`} />
@@ -454,7 +466,6 @@ const Portfolio = () => {
                 onMouseEnter={() => setHoveredTool(tool.name)} 
                 onMouseLeave={() => setHoveredTool(null)}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300`} />
                 <div className="relative z-10">
                   <div className="text-5xl mb-3 group-hover:scale-125 transition-transform duration-300">{tool.icon}</div>
                   <div className="text-sm font-bold text-center">{tool.name}</div>
@@ -479,7 +490,6 @@ const Portfolio = () => {
                 rel="noopener noreferrer" 
                 className="group relative p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 hover:bg-white/10 hover:scale-105 hover:border-white/20 transition-all duration-300 text-center overflow-hidden"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${social.gradient} opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity duration-300`} />
                 <div className="relative z-10">
                   <social.icon className="w-12 h-12 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                   <div className="text-lg font-bold mb-1">{social.name}</div>

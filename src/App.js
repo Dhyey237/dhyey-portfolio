@@ -42,8 +42,6 @@ const Portfolio = () => {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const [hoveredTool, setHoveredTool] = useState(null);
   const [scrollY, setScrollY] = useState(0);
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-  const [clicks, setClicks] = useState([]);
   const [clientForm, setClientForm] = useState({ name: '', email: '', message: '' });
   const [queryForm, setQueryForm] = useState({ name: '', query: '' });
   const [hoveredNav, setHoveredNav] = useState(null);
@@ -53,25 +51,13 @@ const Portfolio = () => {
       setScrollY(window.scrollY);
     };
 
-    const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleClick = (e) => {
-      const newClick = { x: e.clientX, y: e.clientY, id: Date.now() };
-      setClicks(prev => [...prev, newClick]);
-      setTimeout(() => {
-        setClicks(prev => prev.filter(c => c.id !== newClick.id));
-      }, 800);
-    };
+    // only track scroll for now — remove mouse/click visual effects which looked cheap
 
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('click', handleClick);
+    // no mousemove/click handlers anymore
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('click', handleClick);
+      // cleaned up
     };
   }, []);
 
@@ -141,19 +127,12 @@ const Portfolio = () => {
         }
       `}</style>
 
-      <div className="fixed inset-0 opacity-5">
+      {/* decorative blobs behind content; push them behind everything so hero BG is visible */}
+      <div className="fixed inset-0 opacity-5 -z-10">
         <div className="absolute top-20 left-10 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-3xl" />
         <div className="absolute top-40 right-10 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-3xl" />
         <div className="absolute bottom-20 left-1/2 w-96 h-96 bg-cyan-600 rounded-full mix-blend-screen filter blur-3xl" />
       </div>
-
-      {clicks.map(click => (
-        <div key={click.id} className="fixed pointer-events-none z-50" style={{ left: click.x - 100, top: click.y - 100 }}>
-          <div className="w-[200px] h-[200px] bg-gradient-to-r from-cyan-300/50 via-purple-300/50 to-pink-300/50 rounded-full blur-2xl animate-ping" />
-        </div>
-      ))}
-
-      <div className="fixed w-32 h-32 rounded-full pointer-events-none z-40 transition-none mix-blend-screen opacity-0" style={{ left: mousePos.x - 64, top: mousePos.y - 64, background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%)' }} />
 
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-2.5 bg-white/[0.05] backdrop-blur-2xl rounded-full border border-white/[0.1] shadow-[0_0_30px_rgba(0,0,0,0.3)] max-w-[95vw] overflow-x-auto before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-b before:from-white/[0.12] before:to-transparent before:pointer-events-none before:z-0">
         <div className="flex gap-3 md:gap-6 items-center whitespace-nowrap relative z-10">
@@ -167,13 +146,14 @@ const Portfolio = () => {
       </nav>
 
   <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden z-10 pt-32"> {/* top padding for navbar spacing */}
-        <div className="absolute inset-0 z-0">
-          <img src={IMAGES.heroBackground} alt="Background" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
-        </div>
+          <div className="absolute inset-0 z-0">
+            {/* hero background sits above decorative blobs (-z) but below navbar and main content */}
+            <img src={IMAGES.heroBackground} alt="Background" className="w-full h-full object-cover" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
+          </div>
         
         <div className="relative z-10 max-w-6xl w-full mx-auto text-center flex flex-col items-center">
-          <div className="w-full max-w-3xl relative">
+            <div className="w-full max-w-3xl relative">
             {/* Avatar overlaps the top of the card for an aesthetic look */}
             <div className="absolute left-1/2 -translate-x-1/2 -top-28">
               <div className="w-40 h-40 md:w-72 md:h-72 rounded-full overflow-hidden border border-white/[0.08] backdrop-blur-3xl shadow-2xl bg-black">
@@ -182,7 +162,7 @@ const Portfolio = () => {
               </div>
             </div>
 
-            <div className="pt-32 px-6 pb-8 bg-white/[0.05] backdrop-blur-2xl rounded-3xl border border-white/[0.1] shadow-[0_0_50px_rgba(0,0,0,0.3)] mb-12 mx-auto relative z-10 before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-b before:from-white/[0.12] before:to-transparent before:pointer-events-none overflow-hidden group hover:bg-white/[0.08] transition-all duration-700">
+            <div className="pt-32 px-6 pb-8 bg-white/[0.05] backdrop-blur-2xl rounded-3xl border border-white/[0.1] shadow-[0_0_50px_rgba(0,0,0,0.3)] mb-12 mx-auto relative z-20 before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-b before:from-white/[0.12] before:to-transparent before:pointer-events-none overflow-hidden group hover:bg-white/[0.08] transition-all duration-700" style={{ backdropFilter: 'saturate(120%) blur(6px)' }}>
               {/* iOS 16 style light effect */}
               <div className="absolute -inset-[500px] bg-gradient-radial from-blue-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl"/>
               <div className="absolute -inset-[500px] bg-gradient-radial from-purple-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl" style={{ transform: 'translate(50%, 0)' }}/>
@@ -214,29 +194,29 @@ const Portfolio = () => {
         <section id="skills" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 animate-in fade-in slide-in-from-right duration-700 bg-black z-20">
           <div className="w-full max-w-[1800px] mx-auto">
             <h2 className="text-4xl md:text-6xl font-bold text-center mb-12 md:mb-20 bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">What I Do</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6 px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 px-2">
               {skills.map((skill) => {
                 const SkillIcon = skill.icon;
                 return (
                   <div key={skill.id} className="relative group cursor-pointer w-full" onMouseEnter={() => setHoveredSkill(skill.id)} onMouseLeave={() => setHoveredSkill(null)}>
-                    <div className="relative h-[450px] md:h-[550px] lg:h-[600px] rounded-3xl overflow-hidden border border-white/[0.05]" style={{ backgroundImage: `url(${IMAGES.skillBackgrounds[(skill.id - 1) % IMAGES.skillBackgrounds.length]})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                      <div className={`absolute inset-0 bg-gradient-to-t ${skill.gradient} ${hoveredSkill === skill.id ? 'opacity-70' : 'opacity-30'} transition-all duration-700`} />
-                      <div className={`absolute inset-0 ${hoveredSkill === skill.id ? 'backdrop-blur-3xl' : 'backdrop-blur-0'} transition-all duration-700`} />
+                    <div className="relative h-[60vh] min-h-[380px] rounded-3xl overflow-hidden border border-white/[0.05]" style={{ backgroundImage: `url(${IMAGES.skillBackgrounds[(skill.id - 1) % IMAGES.skillBackgrounds.length]})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                      <div className={`absolute inset-0 bg-gradient-to-t ${skill.gradient} ${hoveredSkill === skill.id ? 'opacity-55' : 'opacity-30'} transition-all duration-500`} />
+                      <div className={`absolute inset-0 ${hoveredSkill === skill.id ? 'backdrop-blur-md' : 'backdrop-blur-sm'} transition-all duration-500`} />
                       <div className={`absolute bottom-0 inset-x-0 p-4 md:p-6 ${hoveredSkill === skill.id ? 'opacity-0 translate-y-8 scale-95' : 'opacity-100 translate-y-0 scale-100'} transition-all duration-700 ease-out`}>
                         <div className="flex flex-col items-center gap-2 md:gap-3 bg-black/30 backdrop-blur-2xl rounded-2xl p-3 md:p-4 border border-white/[0.08]">
                           <SkillIcon className="w-6 h-6 md:w-8 md:h-8" />
                           <h3 className="font-bold text-lg md:text-xl lg:text-2xl">{skill.title}</h3>
                         </div>
                       </div>
-                      <div className={`absolute inset-0 flex flex-col items-center justify-center p-4 md:p-6 ${hoveredSkill === skill.id ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-8'} transition-all duration-700 ease-out`}>
-                        <div className="bg-black/40 backdrop-blur-3xl rounded-3xl p-4 md:p-6 border border-white/[0.15] shadow-2xl w-full transform transition-all duration-700">
+                      <div className={`absolute inset-0 flex flex-col items-center justify-center p-4 md:p-6 ${hoveredSkill === skill.id ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-6'} transition-all duration-500 ease-out`}>
+                        <div className="bg-black/40 backdrop-blur-md rounded-3xl p-4 md:p-6 border border-white/[0.12] shadow-2xl w-full transform transition-all duration-500">
                           <div className="flex items-center justify-center gap-2 md:gap-3 mb-4 md:mb-6">
                             <SkillIcon className="w-8 h-8 md:w-10 md:h-10 animate-pulse" />
                             <h3 className="font-bold text-xl md:text-2xl lg:text-3xl">{skill.title}</h3>
                           </div>
                           <div className="space-y-2">
                             {skill.items.map((item, idx) => (
-                              <div key={idx} className="text-xs md:text-sm bg-white/[0.08] backdrop-blur-2xl rounded-xl px-3 md:px-4 py-2 md:py-3 border border-white/[0.1] text-center font-medium hover:bg-white/[0.15] hover:scale-105 hover:border-white/[0.2] transition-all duration-300" style={{ transitionDelay: `${idx * 60}ms`, animation: hoveredSkill === skill.id ? `slideUp 0.5s ease-out ${idx * 60}ms both` : 'none' }}>{item}</div>
+                              <div key={idx} className="text-xs md:text-sm bg-white/[0.06] rounded-xl px-3 md:px-4 py-2 md:py-3 border border-white/[0.08] text-center font-medium hover:bg-white/[0.12] hover:scale-102 transition-all duration-300" style={{ transitionDelay: `${idx * 40}ms`, animation: hoveredSkill === skill.id ? `slideUp 0.45s ease-out ${idx * 40}ms both` : 'none' }}>{item}</div>
                             ))}
                           </div>
                         </div>
@@ -286,7 +266,7 @@ const Portfolio = () => {
                 <div key={idx} className="group relative rounded-2xl overflow-hidden cursor-pointer border border-white/[0.05] hover:border-white/[0.15] transition-all duration-500">
                   {/* Use portrait ratio: 3:4 (height greater than width) */}
                   <div className="w-full" style={{ paddingTop: '133%' }}>
-                    <img src={`${IMAGES.gallery[idx % IMAGES.gallery.length]}?w=800`} alt={`Gallery ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover" style={{ position: 'absolute', top: 0, left: 0 }} />
+                    <img src={`${IMAGES.gallery[idx % IMAGES.gallery.length]}?w=800`} alt={`Gallery ${idx + 1}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" style={{ position: 'absolute', top: 0, left: 0 }} />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
                   <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-md transition-all duration-500" />

@@ -48,28 +48,24 @@ const Portfolio = () => {
   // ==========================================
   const [activeSection, setActiveSection] = useState('hero');
   const [hoveredSkill, setHoveredSkill] = useState(null);
-  const [hoveredTool, setHoveredTool] = useState(null);
   const [clientForm, setClientForm] = useState({ name: '', email: '', message: '' });
   const [queryForm, setQueryForm] = useState({ name: '', query: '' });
-  const [hoveredNav, setHoveredNav] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   // ==========================================
-  // PRELOAD ALL IMAGES FOR INSTANT DISPLAY
+  // PRELOAD IMPORTANT IMAGES (HERO + SKILLS)
   // ==========================================
   useEffect(() => {
     const preloadImages = async () => {
-      const allImages = [
+      // Only preload the images needed for the first view (hero + skills)
+      const priorityImages = [
         IMAGES.heroBackground,
         IMAGES.heroAvatar,
-        ...IMAGES.skillBackgrounds,
-        ...IMAGES.gallery
+        ...IMAGES.skillBackgrounds
       ];
 
-      const imagePromises = allImages.map((src) => {
-        return new Promise((resolve, reject) => {
+      const imagePromises = priorityImages.map((src) => {
+        return new Promise((resolve) => {
           const img = new Image();
           img.onload = resolve;
           img.onerror = resolve; // Resolve even on error to not block
@@ -78,7 +74,6 @@ const Portfolio = () => {
       });
 
       await Promise.all(imagePromises);
-      setImagesLoaded(true);
       setIsLoading(false);
     };
 
@@ -86,11 +81,11 @@ const Portfolio = () => {
   }, []);
 
   // ==========================================
-  // OPTIMIZED SCROLL & MOUSE TRACKING
+  // OPTIMIZED SCROLL TRACKING
   // ==========================================
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -112,28 +107,15 @@ const Portfolio = () => {
       }
     };
 
-    let mouseTicking = false;
-    const handleMouseMove = (e) => {
-      if (!mouseTicking) {
-        window.requestAnimationFrame(() => {
-          setMousePosition({ x: e.clientX, y: e.clientY });
-          mouseTicking = false;
-        });
-        mouseTicking = true;
-      }
-    };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [activeSection]);
 
   // ==========================================
-  // OPTIMIZED SMOOTH SCROLL TO SECTION
+  // SMOOTH SCROLL TO SECTION
   // ==========================================
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -141,8 +123,7 @@ const Portfolio = () => {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
-      // Instant scroll for better performance
+
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     }
   };
@@ -251,7 +232,7 @@ const Portfolio = () => {
             <div className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
           </div>
           <p className="text-white/60 text-sm font-medium">Loading Images...</p>
-          <p className="text-white/40 text-xs mt-2">Preloading all content for smooth experience</p>
+          <p className="text-white/40 text-xs mt-2">Preloading main content for smooth experience</p>
         </div>
       </div>
     );
@@ -278,7 +259,6 @@ const Portfolio = () => {
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
-        /* Hardware acceleration for instant transitions */
         * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
@@ -289,23 +269,20 @@ const Portfolio = () => {
           transform: translateZ(0);
           backface-visibility: hidden;
         }
-        /* Instant hover transitions */
         .instant-hover {
           transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
           will-change: transform, opacity;
         }
-        /* Remove blur lag */
         .no-blur-lag {
           will-change: backdrop-filter;
         }
-        /* Preload and cache all images */
         .preloaded-image {
           content-visibility: auto;
         }
       `}</style>
 
       {/* ========================================== */}
-      {/* OPTIMIZED BACKGROUND - REDUCED COMPLEXITY */}
+      {/* OPTIMIZED BACKGROUND */}
       {/* ========================================== */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl" />
@@ -314,7 +291,7 @@ const Portfolio = () => {
       </div>
 
       {/* ========================================== */}
-      {/* ENHANCED NAVIGATION BAR */}
+      {/* NAVIGATION BAR */}
       {/* ========================================== */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-3 md:px-6 py-3 bg-black/40 backdrop-blur-2xl rounded-full border border-white/10 shadow-2xl max-w-[95vw]">
         <div className="flex gap-2 md:gap-4 items-center">
@@ -328,8 +305,6 @@ const Portfolio = () => {
             <button 
               key={item.id} 
               onClick={() => scrollToSection(item.id)} 
-              onMouseEnter={() => setHoveredNav(item.id)} 
-              onMouseLeave={() => setHoveredNav(null)} 
               className={`relative px-4 md:px-6 py-2.5 rounded-full transition-all duration-300 ${
                 activeSection === item.id 
                   ? 'bg-white text-black shadow-lg scale-105' 
@@ -343,33 +318,37 @@ const Portfolio = () => {
       </nav>
 
       {/* ========================================== */}
-      {/* HERO SECTION - ENHANCED */}
+      {/* HERO SECTION */}
       {/* ========================================== */}
       <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden pt-32 pb-20">
-        {/* Enhanced Background */}
+        {/* Background */}
         <div className="absolute inset-0 z-0">
           <img 
             src={IMAGES.heroBackground} 
             alt="Background" 
             className="w-full h-full object-cover scale-105" 
+            loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black" />
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-pink-900/20" />
         </div>
         
         <div className="relative z-10 max-w-5xl w-full mx-auto text-center">
-          {/* Enhanced Avatar - 50% bigger, no border */}
+          {/* Avatar */}
           <div className="mb-10 opacity-0 animate-[fadeIn_0.8s_ease-out_0.2s_forwards]">
             <div className="w-52 h-52 md:w-80 md:h-80 rounded-full overflow-hidden shadow-2xl mx-auto">
               <img 
                 src={IMAGES.heroAvatar} 
                 alt={PERSONAL_INFO.name} 
                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
+                loading="eager"
+                decoding="async"
               />
             </div>
           </div>
 
-          {/* Enhanced Name Card */}
+          {/* Name + Tagline */}
           <div className="mb-10 opacity-0 animate-[fadeIn_0.8s_ease-out_0.4s_forwards]">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tight">
               <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-2xl">
@@ -381,7 +360,7 @@ const Portfolio = () => {
             </p>
           </div>
 
-          {/* Enhanced Bio Card */}
+          {/* Bio */}
           <div className="max-w-3xl mx-auto mb-12 px-8 py-10 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl opacity-0 animate-[fadeIn_0.8s_ease-out_0.6s_forwards] hover:bg-white/8 transition-all duration-500">
             <p className="text-base md:text-lg leading-relaxed text-white/90 mb-5">
               {PERSONAL_INFO.bio1}
@@ -391,7 +370,7 @@ const Portfolio = () => {
             </p>
           </div>
 
-          {/* Enhanced Keywords */}
+          {/* Keywords */}
           <div className="flex flex-wrap justify-center gap-4 opacity-0 animate-[fadeIn_0.8s_ease-out_0.8s_forwards]">
             {keywords.map((keyword, idx) => (
               <div 
@@ -416,7 +395,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* SKILLS SECTION - GALLERY-STYLE HOVER (MATCHING MY WORK) */}
+      {/* SKILLS SECTION (WITH LIGHT BLUR ON HOVER) */}
       {/* ========================================== */}
       <section id="skills" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 bg-black">
         <div className="w-full max-w-[1800px] mx-auto">
@@ -439,10 +418,10 @@ const Portfolio = () => {
                 >
                   {/* Card Container */}
                   <div className="relative h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                    {/* Background Image with Scale Effect - NO BLUR */}
+                    {/* Background Image with Scale + LIGHT BLUR on hover */}
                     <div className="absolute inset-0 overflow-hidden">
                       <div 
-                        className="w-full h-full instant-hover group-hover:scale-110 preloaded-image"
+                        className="w-full h-full instant-hover group-hover:scale-110 group-hover:blur-sm preloaded-image"
                         style={{ 
                           backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
                           backgroundSize: 'cover', 
@@ -451,7 +430,7 @@ const Portfolio = () => {
                       />
                     </div>
                     
-                    {/* Gradient Overlay - Instant transition */}
+                    {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 instant-hover" />
                     
                     {/* Bottom Label - Default State */}
@@ -490,7 +469,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* TOOLS & HANDLES SECTION - ENHANCED */}
+      {/* TOOLS & HANDLES SECTION */}
       {/* ========================================== */}
       <section id="tools" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 bg-gradient-to-b from-black via-gray-900/20 to-black">
         <div className="w-full max-w-[1800px] mx-auto">
@@ -505,9 +484,7 @@ const Portfolio = () => {
             {tools.map((tool, idx) => (
               <div 
                 key={idx} 
-                className="group relative px-8 py-6 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:shadow-2xl hover:border-white/20" 
-                onMouseEnter={() => setHoveredTool(tool.name)} 
-                onMouseLeave={() => setHoveredTool(null)}
+                className="group relative px-8 py-6 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:shadow-2xl hover:border-white/20"
               >
                 <div className="relative z-10">
                   <div className="text-5xl mb-3 group-hover:scale-125 transition-transform duration-300">{tool.icon}</div>
@@ -517,7 +494,7 @@ const Portfolio = () => {
             ))}
           </div>
           
-          {/* Social Handles - Enhanced */}
+          {/* Social Handles */}
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-center mb-12">
             <span className="bg-gradient-to-r from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent">
               Let's Connect
@@ -545,7 +522,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* GALLERY SECTION - ENHANCED */}
+      {/* GALLERY SECTION (OPTIMIZED) */}
       {/* ========================================== */}
       <section id="gallery" className="relative min-h-screen py-20 md:py-32 px-4 bg-black">
         <div className="max-w-7xl mx-auto">
@@ -568,7 +545,9 @@ const Portfolio = () => {
                   <img 
                     src={image}
                     alt={`Gallery ${idx + 1}`} 
-                    loading="eager"
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 instant-hover preloaded-image" 
                     style={{ transform: 'translateZ(0)' }}
                   />
@@ -586,7 +565,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* CONTACT SECTION - ENHANCED */}
+      {/* CONTACT SECTION */}
       {/* ========================================== */}
       <section id="contact" className="relative min-h-screen py-20 md:py-32 px-4 bg-gradient-to-b from-black via-purple-900/10 to-black">
         <div className="max-w-4xl mx-auto">

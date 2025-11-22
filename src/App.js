@@ -5,8 +5,8 @@ import { Camera, Film, Palette, Aperture, Instagram, MessageCircle, Mail, Extern
 // IMAGE IMPORTS - CUSTOMIZE YOUR IMAGES HERE
 // ==========================================
 // Replace these import paths with your actual image paths
-import heroBg from './Images/hero/bg.jpg';
-import heroAvatar from './Images/hero/20250816_062329.jpg';
+import heroBg from './Images/hero/bg1.jpg';
+import heroAvatar from './Images/hero/0.jpg';
 
 import skill1 from './Images/skills/pexels-mikegiugliano-3009066.jpg';
 import skill2 from './Images/skills/tamara-malaniy-Q7xoPRzWAuw-unsplash.jpg';

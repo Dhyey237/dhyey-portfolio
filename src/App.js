@@ -56,48 +56,66 @@ const Portfolio = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // ==========================================
-  // ENHANCED SCROLL & MOUSE TRACKING
+  // OPTIMIZED SCROLL & MOUSE TRACKING
   // ==========================================
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 300);
+    // Instant load - no artificial delay
+    setIsLoading(false);
 
+    let ticking = false;
+    
     const handleScroll = () => {
-      const sections = ['hero', 'skills', 'tools', 'gallery', 'contact'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 150 && rect.bottom >= 150;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sections = ['hero', 'skills', 'tools', 'gallery', 'contact'];
+          const current = sections.find(section => {
+            const element = document.getElementById(section);
+            if (element) {
+              const rect = element.getBoundingClientRect();
+              return rect.top <= 150 && rect.bottom >= 150;
+            }
+            return false;
+          });
+          if (current && current !== activeSection) {
+            setActiveSection(current);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
+    let mouseTicking = false;
     const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (!mouseTicking) {
+        window.requestAnimationFrame(() => {
+          setMousePosition({ x: e.clientX, y: e.clientY });
+          mouseTicking = false;
+        });
+        mouseTicking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [activeSection]);
 
   // ==========================================
-  // SMOOTH SCROLL TO SECTION
+  // OPTIMIZED SMOOTH SCROLL TO SECTION
   // ==========================================
   const scrollToSection = (id) => {
-    setActiveSection(id);
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      // Instant scroll for better performance
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     }
   };
@@ -232,24 +250,25 @@ const Portfolio = () => {
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
+        /* Hardware acceleration for smooth transitions */
+        .skill-card-transform {
+          transform: translateZ(0);
+          will-change: transform;
+        }
+        /* Optimize image rendering */
+        img {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+        }
       `}</style>
 
       {/* ========================================== */}
-      {/* ENHANCED BACKGROUND WITH MOUSE TRACKING */}
+      {/* OPTIMIZED BACKGROUND - REDUCED COMPLEXITY */}
       {/* ========================================== */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl" />
         <div className="absolute top-40 right-10 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl" />
         <div className="absolute bottom-20 left-1/2 w-96 h-96 bg-cyan-600/20 rounded-full mix-blend-screen filter blur-3xl" />
-        
-        {/* Mouse-following gradient spotlight */}
-        <div 
-          className="absolute w-[600px] h-[600px] bg-gradient-radial from-white/5 via-transparent to-transparent rounded-full blur-3xl pointer-events-none transition-all duration-700 ease-out"
-          style={{
-            left: mousePosition.x - 300 + 'px',
-            top: mousePosition.y - 300 + 'px',
-          }}
-        />
       </div>
 
       {/* ========================================== */}
@@ -355,7 +374,7 @@ const Portfolio = () => {
       </section>
 
       {/* ========================================== */}
-      {/* SKILLS SECTION - WITH GALLERY-STYLE HOVER */}
+      {/* SKILLS SECTION - GALLERY-STYLE HOVER (MATCHING MY WORK) */}
       {/* ========================================== */}
       <section id="skills" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 px-4 bg-black">
         <div className="w-full max-w-[1800px] mx-auto">
@@ -377,18 +396,11 @@ const Portfolio = () => {
                   onMouseLeave={() => setHoveredSkill(null)}
                 >
                   {/* Card Container */}
-                  <div 
-                    className="relative h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
-                    style={{ 
-                      backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
-                      backgroundSize: 'cover', 
-                      backgroundPosition: 'center' 
-                    }}
-                  >
-                    {/* Image scales on hover like gallery */}
+                  <div className="relative h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                    {/* Background Image with Scale Effect */}
                     <div className="absolute inset-0 overflow-hidden">
                       <div 
-                        className="w-full h-full group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full transition-transform duration-500 group-hover:scale-110"
                         style={{ 
                           backgroundImage: `url(${IMAGES.skillBackgrounds[index]})`, 
                           backgroundSize: 'cover', 
@@ -397,31 +409,23 @@ const Portfolio = () => {
                       />
                     </div>
                     
-                    {/* Overlay - INSTANT transition */}
-                    <div className={`absolute inset-0 bg-gradient-to-t ${skill.gradient} transition-all duration-200 ${
-                      hoveredSkill === skill.id ? 'opacity-60' : 'opacity-30'
-                    }`} />
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
                     
-                    {/* Blur Effect - INSTANT transition */}
-                    <div className={`absolute inset-0 transition-all duration-200 ${
-                      hoveredSkill === skill.id ? 'backdrop-blur-sm' : 'backdrop-blur-0'
-                    }`} />
+                    {/* Blur Effect on Hover */}
+                    <div className="absolute inset-0 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300" />
                     
-                    {/* Bottom Label - Maximum transparency */}
-                    <div className={`absolute bottom-0 inset-x-0 p-6 transition-all duration-200 ${
-                      hoveredSkill === skill.id ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
-                    }`}>
-                      <div className="bg-black/15 backdrop-blur-2xl rounded-2xl p-5 border border-white/5">
+                    {/* Bottom Label - Default State */}
+                    <div className="absolute bottom-0 inset-x-0 p-6 transform translate-y-0 opacity-100 group-hover:translate-y-4 group-hover:opacity-0 transition-all duration-300">
+                      <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-5 border border-white/20">
                         <SkillIcon className="w-8 h-8 mx-auto mb-3" />
                         <h3 className="font-bold text-2xl text-white text-center drop-shadow-lg">{skill.title}</h3>
                       </div>
                     </div>
                     
-                    {/* Hover Content - INSTANT transition */}
-                    <div className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-200 ${
-                      hoveredSkill === skill.id ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-                    }`}>
-                      <div className="bg-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/15 w-full">
+                    {/* Hover Content - Items List */}
+                    <div className="absolute inset-0 flex items-center justify-center p-6 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className="bg-black/50 backdrop-blur-xl rounded-3xl p-6 border border-white/20 w-full max-w-sm">
                         <div className="flex items-center justify-center gap-3 mb-6">
                           <SkillIcon className="w-10 h-10" />
                           <h3 className="font-bold text-3xl">{skill.title}</h3>
@@ -430,7 +434,7 @@ const Portfolio = () => {
                           {skill.items.map((item, idx) => (
                             <div 
                               key={idx} 
-                              className="text-sm bg-white/10 rounded-xl px-4 py-3 border border-white/15 text-center font-medium hover:bg-white/20 hover:scale-105 transition-all duration-200"
+                              className="text-sm bg-white/10 rounded-xl px-4 py-3 border border-white/20 text-center font-medium hover:bg-white/20 hover:scale-105 transition-all duration-200"
                             >
                               {item}
                             </div>

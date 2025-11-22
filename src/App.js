@@ -1,45 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, Film, Palette, Aperture, Instagram, MessageCircle, Mail, ExternalLink, Sparkles, Zap, Star, Award, Video, FileImage, Monitor, Heart } from 'lucide-react';
 
-// Centralized image URLs so you can change them in one place
+// Local image imports (from `src/Images`)
+import heroBg from './Images/hero/bg.jpg';
+import heroAvatar from './Images/hero/20250816_062329.jpg';
+
+import skill1 from './Images/skills/pexels-mikegiugliano-3009066.jpg';
+import skill2 from './Images/skills/tamara-malaniy-Q7xoPRzWAuw-unsplash.jpg';
+import skill3 from './Images/skills/tom-podmore-ZbeW6fB84-Q-unsplash.jpg';
+import skill4 from './Images/skills/vincenzo-de-simone-KFtEH51bGdU-unsplash.jpg';
+
+import g1 from './Images/gallery/20250816_073000.jpg';
+import g2 from './Images/gallery/20250816_080304.jpg';
+import g3 from './Images/gallery/20250816_083345.jpg';
+import g4 from './Images/gallery/20250816_084443.jpg';
+import g5 from './Images/gallery/20250816_085430.jpg';
+import g6 from './Images/gallery/20250816_090627.jpg';
+import g7 from './Images/gallery/20250816_090644.jpg';
+import g8 from './Images/gallery/20250816_090720.jpg';
+import g9 from './Images/gallery/20250816_091001.jpg';
+import g10 from './Images/gallery/IMG_3147.JPG';
+import g11 from './Images/gallery/IMG_6974.jpg';
+import g12 from './Images/gallery/IMG_6984.jpg';
+import g13 from './Images/gallery/IMG_7019.jpg';
+import g14 from './Images/gallery/IMG_7045.jpg';
+import g15 from './Images/gallery/IMG_7047.jpg';
+import g16 from './Images/gallery/IMG_7544.jpg';
+import g17 from './Images/gallery/IMG_7613.jpg';
+import g18 from './Images/gallery/PXL_20250706_025430795.jpg';
+
+// Centralized image references so you can change them in one place
 const IMAGES = {
-  heroBackground: '/images/hero/bg.jpg',
-  heroAvatar: '/images/hero/avatar.jpg',
-  skillBackgrounds: [
-    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f?w=600',
-    'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600',
-    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
-    'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600'
-  ],
-  // Gallery images (24) - replace any of these URLs to update the gallery
-  // Default gallery images (you can replace with local files under public/images/gallery/)
-  gallery: [
-    'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
-    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd',
-    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44f',
-    'https://images.unsplash.com/photo-1556761175-4b46a572b786',
-    'https://images.unsplash.com/photo-1542038382126-3e36f93c3a5c',
-    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
-    'https://images.unsplash.com/photo-1485846234815-bf3f6a63d9ae',
-    'https://images.unsplash.com/photo-1452587925148-ce544e77e70d',
-    'https://images.unsplash.com/photo-1606857521015-7f9fcf423740',
-    'https://images.unsplash.com/photo-1567095761054-7a02e69e5c43',
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64',
-    'https://images.unsplash.com/photo-1612198188060-f6d2c0ab2550',
-    'https://images.unsplash.com/photo-1524758631624-e2822e304c36',
-    'https://images.unsplash.com/photo-1626785774573-4b799315345d',
-    'https://images.unsplash.com/photo-1515705576-fbfd5641b5d6',
-    'https://images.unsplash.com/photo-1470093851219-69c8c7c6c6c0',
-    'https://images.unsplash.com/photo-1469827160215-9d29e96e72f4',
-    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
-    'https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5',
-    'https://images.unsplash.com/photo-1515378791036-0648a3336e77',
-    'https://images.unsplash.com/photo-1554048612-b6a482bc67e0',
-    'https://images.unsplash.com/photo-1527576539890-dfa815648363',
-    'https://images.unsplash.com/photo-1611162617474-5b21e879e113',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
-  ]
+  heroBackground: heroBg,
+  heroAvatar: heroAvatar,
+  skillBackgrounds: [skill1, skill2, skill3, skill4],
+  gallery: [g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12, g13, g14, g15, g16, g17, g18]
 };
 
 const Portfolio = () => {
